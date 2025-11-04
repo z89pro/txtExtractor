@@ -90,22 +90,37 @@ async def account_login(bot: Client, m: Message):
     input1: Message = await bot.listen(editable.chat.id)
     raw_text = input1.text
     s = requests.Session()
+    token = None  # Initialize token variable
+    
     if "*" in raw_text:
       data["email"] = raw_text.split("*")[0]
       data["password"] = raw_text.split("*")[1]
       await input1.delete(True)
-      #s = requests.Session()
-      response = s.post(url = url, headers=headers, json=data, timeout=10)
-      if response.status_code == 200:
-          data = response.json()
-          token = data["data"]["token"]
-          await m.reply_text(token)
-      else:
-           await m.reply_text("go back to response")
-      #token = "4ffd1627981589c0a1261f7a114fbbf8bc87c6d9"
-      await m.reply_text(f"```{token}```")
+      
+      try:
+          response = s.post(url = url, headers=headers, json=data, timeout=10)
+          if response.status_code == 200:
+              response_data = response.json()
+              if "data" in response_data and "token" in response_data["data"]:
+                  token = response_data["data"]["token"]
+                  await m.reply_text("✅ **Login Successful!**")
+                  await m.reply_text(f"```{token}```")
+              else:
+                  await m.reply_text("❌ **Error:** Invalid response format from server.")
+                  return
+          else:
+              await m.reply_text(f"❌ **Login Failed:** Server returned status {response.status_code}")
+              return
+      except Exception as e:
+          await m.reply_text(f"❌ **Error:** {str(e)}")
+          return
     else:
       token = raw_text
+      
+    # Validate token before proceeding
+    if not token or token.strip() == "":
+        await m.reply_text("❌ **Error:** Invalid or empty token provided.")
+        return
     html1 = s.get("https://elearn.crwilladmin.com/api/v1/comp/my-batch?&token=" + token).json()
     topicid = html1["data"]["batchData"]
     cool=""

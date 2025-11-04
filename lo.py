@@ -20,21 +20,15 @@ import subprocess
 from pyrogram.types import Message
 from pyrogram import Client, filters
 from pyromod import listen
-from pyrogram.types import Message
-import tgcrypto
 import asyncio 
 import pyrogram
 from pyrogram import Client, filters, idle
 from pyrogram.types.messages_and_media import message
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram.errors import FloodWait
-import time
 from pyrogram.types import User, Message
-from p_bar import progress_bar
-import subprocess
 from subprocess import getstatusoutput
 import logging
-import os
 import sys
 import re
 from pyrogram import Client as bot
@@ -70,12 +64,12 @@ def pull_run(work, cmds):
 	        print(result) 
 bot = Client(
   "CW",
-  bot_token= "6917084113:AAFOK37UIoEQLtY2HYu5UeF77cIF4BfGnwk",
-  api_id= 27097807 ,
-  api_hash= "9fd790a9cb1f639c921d941621d2959d" 
+  bot_token= os.environ.get("BOT_TOKEN_CW", ""),
+  api_id= int(os.environ.get("API_ID_CW", "0")),
+  api_hash= os.environ.get("API_HASH_CW", "")
 )
 
-@bot.on_message(filters.command(["down"]) & ~filters.edited)
+@bot.on_message(filters.command(["down"]))
 async def account_login(bot: Client, m: Message):
     #s = requests.Session()
     global cancel

@@ -64,10 +64,32 @@ import os
 )
 async def forward(bot: Client , m: Message):
     msg = await bot.ask(m.chat.id, "**Forward any message from the Target channel\nBot should be admin at both the Channels**")
+    
+    # Validate target message
+    if not msg.forward_from_chat or not msg.forward_from_chat.id:
+        await m.reply_text("❌ **Error:** Please forward a valid message from the target channel.")
+        return
     t_chat = msg.forward_from_chat.id
+    
     msg1 = await bot.ask(m.chat.id, "**Send Starting Message From Where you want to Start forwarding**")
+    
+    # Validate starting message
+    if not msg1.forward_from_chat or not msg1.forward_from_chat.id or not msg1.forward_from_message_id:
+        await m.reply_text("❌ **Error:** Please forward a valid starting message from the source channel.")
+        return
+        
     msg2 = await bot.ask(m.chat.id, "**Send Ending Message from same chat**")
-   # print(msg1.forward_from_message_id, msg1.forward_from_chat.id, msg1.forward_from_message_id)
+    
+    # Validate ending message
+    if not msg2.forward_from_chat or not msg2.forward_from_chat.id or not msg2.forward_from_message_id:
+        await m.reply_text("❌ **Error:** Please forward a valid ending message from the source channel.")
+        return
+        
+    # Ensure both messages are from the same chat
+    if msg1.forward_from_chat.id != msg2.forward_from_chat.id:
+        await m.reply_text("❌ **Error:** Starting and ending messages must be from the same channel.")
+        return
+        
     i_chat = msg1.forward_from_chat.id
     s_msg = int(msg1.forward_from_message_id)
     f_msg = int(msg2.forward_from_message_id)+1

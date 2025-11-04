@@ -7,7 +7,7 @@ import os
 import sys
 
 
-@bot.on_message(filters.command(["start"]) & ~filters.edited)
+@bot.on_message(filters.command(["start"]))
 async def Start_msg(client: Client , m: Message):
     await client.send_photo(
     m.chat.id,
@@ -27,17 +27,18 @@ async def Start_msg(client: Client , m: Message):
                             "Press **/samyak** for ** Samayak Ias**..\n\n"
                             "Press **/chandra** for ** Chandra app**..\n\n"
                             "Press **/mgconcept** for **Mgconcept app**..\n\n"
+                            "Press **/aashofficial** for **Aash Official app**..\n\n"
                             "Press **/down** for **For Downloading Url lists**..\n\n"
                             "Press **/forward** To **Forward from One channel to others**..\n\n"
                             "**𝗕𝗼𝘁 𝗢𝘄𝗻𝗲𝗿 : YASH**")
            
 
 
-@bot.on_message(filters.command(["restart"]) & ~filters.edited)
+@bot.on_message(filters.command(["restart"]))
 async def restart_handler(_, m):
     await m.reply_text("Restarted!", True)
     os.execl(sys.executable, sys.executable, *sys.argv)
 
-@bot.on_message(filters.command(["log"]) & ~filters.edited)
+@bot.on_message(filters.command(["log"]))
 async def log_msg(client: Client , m: Message):   
     await client.send_document(m.chat.id, "log.txt")
