@@ -49,16 +49,19 @@ AUTH_USERS = [ int(chat) for chat in Config.AUTH_USERS.split(",") if chat != '']
 prefixes = ["/", "~", "?", "!"]
 
 plugins = dict(root="plugins")
+
+# Create bot instance (moved outside main block so it can be imported)
+bot = Client(
+    "StarkBot",
+    bot_token=Config.BOT_TOKEN,
+    api_id=Config.API_ID,
+    api_hash=Config.API_HASH,
+    sleep_threshold=20,
+    plugins=plugins,
+    workers = 50
+)
+
 if __name__ == "__main__" :
-    bot = Client(
-        "StarkBot",
-        bot_token=Config.BOT_TOKEN,
-        api_id=Config.API_ID,
-        api_hash=Config.API_HASH,
-        sleep_threshold=20,
-        plugins=plugins,
-        workers = 50
-    )
     
     async def main():
         await bot.start()
